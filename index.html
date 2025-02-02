@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mermaid.js 互動流程圖</title>
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true });
+    </script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        .mermaid {
+            text-align: left;
+            max-width: 90%;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            overflow-x: auto;
+        }
+        h2 {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <h2>Mermaid.js 互動流程圖</h2>
+    <div class="mermaid">
+        flowchart TB
+    Start([費用發生]) --> ProjectCheck["預算系統查詢<br/>1. 檢查預算科目<br/>2. 確認預算餘額<br/>3. 檢查現金支付累計<br/><br/>⚠️注意事項：<br/>• 現金支付上限30%<br/>• 按605系統紀錄為準"]
+    
+    ProjectCheck --> BudgetOK{預算充足?}
+    BudgetOK -->|否| BudgetReview["預算檢討<br/>1. 調整支出規劃<br/>2. 申請追加預算<br/><br/>⚠️注意事項：<br/>• 超預算需主管核准<br/>• 可能影響付款時程"]
+    BudgetReview --> ProjectCheck
+    
+    BudgetOK -->|是| CashLimit{現金支付是否<br/>達30%上限?}
+    CashLimit -->|是| NeedChange["變更付款方式<br/>1. 改為公司支付<br/>2. 或申請主管核准<br/><br/>⚠️注意事項：<br/>• 需說明必須現金原因<br/>• 審核時程約3-5天"]
+    NeedChange --> FirstQ
+    CashLimit -->|否| FirstQ
+
+    FirstQ{付款方式?}
+    
+    FirstQ -->|請款人支付| PrepayCheck{是否需要預支?}
+    
+    PrepayCheck -->|需要預支| PreCheckA{包含勞務費用?}
+    PreCheckA -->|是| TaxCheckA["稅務確認<br/>1. 計算應扣稅額<br/>2. 確認月收入總額<br/>3. 評估補充保費<br/><br/>⚠️注意事項：<br/>• 按月計算所得額度<br/>• 收入超過需扣稅<br/>• 提醒預留稅額"]
+    
+    PreCheckA -->|否| AForm["A表-週轉費用請款<br/>1. 線上填寫201表<br/>2. 註明專案結束日<br/>3. 7天內需核銷<br/><br/>⚠️注意事項：<br/>• 逾期未核銷需說明<br/>• 不可跨月核銷"]
+    
+    TaxCheckA --> AForm
+    AForm --> GetMoney["系統撥款通知<br/>1. 帳務處理中<br/>2. 發送匯款通知<br/><br/>⚠️注意事項：<br/>• 建議預留手續費<br/>• 留意匯款通知"]
+    
+    GetMoney --> CollectDoc1["收集單據<br/>1. PDF發票轉寄<br/>2. 實體單據整理<br/><br/>⚠️注意事項：<br/>• 參考401憑證規範<br/>• 檢查402單據要求<br/>• 不收記帳單"]
+    
+    CollectDoc1 --> DocType1{單據類型?}
+    DocType1 -->|一般單據| BForm["B表-核銷預支款<br/>1. 線上填寫201表<br/>2. 檢查核銷期限<br/>3. 繳交實體單據<br/><br/>⚠️注意事項：<br/>• 標註原A表單號<br/>• 說明金額差異"]
+    
+    DocType1 -->|勞務費用| ToLabor1[前往勞務處理]
+    
+    PrepayCheck -->|自行代墊| PreCheckB{包含勞務費用?}
+    PreCheckB -->|是| TaxCheckB["稅務確認<br/>1. 計算應扣稅額<br/>2. 確認月收入總額<br/>3. 評估補充保費<br/><br/>⚠️注意事項：<br/>• 依身份別扣稅<br/>• 確認投保身份"]
+    
+    PreCheckB -->|否| CollectDoc2["先行代墊支付<br/>1. PDF發票轉寄<br/>2. 實體單據整理<br/><br/>⚠️注意事項：<br/>• 確認單據合規性<br/>• 檢查日期時效"]
+    
+    TaxCheckB --> CollectDoc2
+    CollectDoc2 --> DocType2{單據類型?}
+    
+    DocType2 -->|一般單據| CForm["C表-無預支報銷<br/>1. 線上填寫201表<br/>2. 檢查預算比例<br/><br/>⚠️注意事項：<br/>• 單據需原始正本<br/>• 檢查統編抬頭"]
+    
+    DocType2 -->|勞務費用| ToLabor2[前往勞務處理]
+
+    FirstQ -->|公司支付| VendorCheck{查詢603系統<br/>確認建檔狀態}
+    VendorCheck -->|無建檔| NewVendor["建檔流程<br/>1. 廠商填寫501表<br/>2. 個人填寫502表<br/><br/>⚠️注意事項：<br/>• 證件需清晰完整<br/>• 帳戶需本人名下"]
+    
+    VendorCheck -->|已建檔| DForm["D表-待付費用請款<br/>1. 線上填寫201表<br/>2. 等待線上簽核<br/><br/>⚠️注意事項：<br/>• 檢查匯款資訊<br/>• 確認付款條件"]
+    
+    NewVendor --> DForm
+    DForm --> POCreate["開立採購訂單<br/>1. 填寫工作內容<br/>2. 確認金額明細<br/>3. 訂定交付期限<br/><br/>⚠️注意事項：<br/>• 需列明工作項目<br/>• 確認付款里程碑"]
+    
+    POCreate --> PaymentType{付款方式?}
+    PaymentType -->|發票| Invoice["提供發票<br/>1. 電子發票寄信箱<br/>2. 實體發票寄公司<br/><br/>⚠️注意事項：<br/>• 檢查品項明細<br/>• 確認統編資訊"]
+    
+    PaymentType -->|勞務| Labor202["202表-勞務請款<br/>1. 依採購單填寫<br/>2. 確認身份證件<br/>3. Email回傳確認<br/><br/>⚠️注意事項：<br/>• 簽名需清晰完整<br/>• 檢附證件影本"]
+
+    subgraph LaborProcess[勞務處理流程]
+        direction TB
+        LaborCheck{願意建檔?}
+        LaborCheck -->|願意| DBCheck["查詢603系統<br/><br/>⚠️注意事項：<br/>• 檢查證件有效期<br/>• 確認投保狀態"]
+        
+        DBCheck -->|已建檔| Form203["203表-線上填寫<br/>1. 確認稅務資訊<br/>2. Email確認<br/><br/>⚠️注意事項：<br/>• 需本人確認<br/>• 檢查月收入"]
+        
+        DBCheck -->|未建檔| NewFile["建立502檔案<br/>1. 填寫基本資料<br/>2. 上傳證件掃描<br/><br/>⚠️注意事項：<br/>• 證件需雙證件<br/>• 帳戶需本人"]
+        
+        NewFile --> Form203
+        LaborCheck -->|不願意| CashCheck{金額>2萬?}
+        CashCheck -->|是| NeedFile["必須建檔<br/><br/>⚠️注意：<br/>• 法規要求<br/>• 不可分單"]
+        CashCheck -->|否| Form205["205表-紙本處理<br/>1. 現場簽收確認<br/>2. 檢附證件影本<br/><br/>⚠️注意事項：<br/>• 需當場確認<br/>• 填寫無誤"]
+    end
+
+    ToLabor1 & ToLabor2 --> LaborProcess
+    Form203 & Form205 --> CheckSource{是否使用A表預支?}
+    CheckSource -->|是| BForm
+    CheckSource -->|否| CForm
+
+    BForm & CForm & Invoice & Labor202 --> FinalCheck["系統審核<br/>1. 檢查核銷期限<br/>2. 確認預算比例<br/>3. 查詢605紀錄<br/><br/>⚠️注意事項：<br/>• 補件需於3天內<br/>• 遵循審核時程"]
+    
+    FinalCheck -->|通過| UpdateBudget["系統自動更新<br/>1. 更新支付比例<br/>2. 更新預算餘額<br/><br/>⚠️注意事項：<br/>• 追蹤請款進度<br/>• 確認入帳狀態"]
+    
+    UpdateBudget --> Payment["撥款作業<br/>1. 帳務處理中<br/>2. 系統發送通知<br/><br/>⚠️注意事項：<br/>• 約需3-5工作天<br/>• 留意入帳通知"]
+    
+    FinalCheck -->|需補件| Fix["線上補件<br/>1. 系統通知<br/>2. 3天補件期限<br/><br/>⚠️注意事項：<br/>• 補件需準時<br/>• 確認資料正確"] --> FinalCheck
+    
+    Payment --> Done([結案])
+
+    %% 樣式設定
+    style Start fill:#d4f1f4
+    style Done fill:#d4f1f4
+    
+    style ProjectCheck fill:#ffecb3
+    style BudgetReview fill:#ffecb3
+    style CashLimit fill:#ffb3b3
+    style NeedChange fill:#ffb3b3
+    
+    style TaxCheckA fill:#ffecb3
+    style TaxCheckB fill:#ffecb3
+    
+    style AForm fill:#e1fee1
+    style BForm fill:#e1fee1
+    style CForm fill:#e1fee1
+    style DForm fill:#e1fee1
+    
+    style Labor202 fill:#fbf2d4
+    style Form203 fill:#fbf2d4
+    style Form205 fill:#ffb3b3
+    
+    style LaborProcess fill:#f0f0ff
+    style FinalCheck fill:#f0e1ff
+    </div>
+</body>
+</html>
