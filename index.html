@@ -3,37 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mermaid.js 互動流程圖</title>
-    <script type="module">
-        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
-        mermaid.initialize({ startOnLoad: true });
+    <title>映奧點帳務作業流程</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: "dark"  // Mermaid 主題（default, dark, forest, neutral）
+        });
     </script>
     <style>
+        /* 1️⃣ 修改整個頁面的背景顏色 */
         body {
+            background-color: #121212; /* 黑灰色背景 */
+            color: #ffffff; /* 主要字體顏色 - 白色 */
             font-family: Arial, sans-serif;
             text-align: center;
             padding: 20px;
-            background-color: #f8f9fa;
         }
+
+        /* 2️⃣ 修改標題樣式 */
+        h2 {
+            font-size: 28px;
+            font-weight: bold;
+            color: #ffcc00; /* 亮黃色標題 */
+            margin-bottom: 20px;
+        }
+
+        /* 3️⃣ 修改 Mermaid.js 流程圖的背景顏色 */
         .mermaid {
+            background-color: #1e1e1e; /* 深灰色區塊背景 */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 12px rgba(255, 255, 255, 0.2);
             text-align: left;
             max-width: 90%;
             margin: 0 auto;
-            background: #ffffff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
             overflow-x: auto;
         }
-        h2 {
-            color: #333;
-        }
+
+        /* 4️⃣ Mermaid.js 內部節點顏色設定（防止過暗） */
+     .mermaid rect, .mermaid polygon {
+    fill: #2a2a2a !important; /* 深灰色方塊 */
+    stroke: #ffcc00 !important; /* 黃色邊框 */
+}
+
+.mermaid text {
+    fill: #ffffff !important; /* 白色文字 */
+}
+
+.mermaid .edgePath path {
+    stroke: #ffcc00 !important; /* 連線變成黃色 */
+}
+
+.mermaid .edgeLabel text {
+    fill: #ffcc00 !important; /* 連線標籤變成黃色 */
+}
     </style>
 </head>
 <body>
-    <h2>Mermaid.js 互動流程圖</h2>
+    <h2>映奧點帳務作業流程</h2>
     <div class="mermaid">
-        flowchart TB
+flowchart TB
     Start([費用發生]) --> ProjectCheck["預算系統查詢<br/>1. 檢查預算科目<br/>2. 確認預算餘額<br/>3. 檢查現金支付累計<br/><br/>⚠️注意事項：<br/>• 現金支付上限30%<br/>• 按605系統紀錄為準"]
     
     ProjectCheck --> BudgetOK{預算充足?}
